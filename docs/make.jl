@@ -6,12 +6,12 @@ makedocs(;
     pages=[
         "Home" => "index.md",
     ],
-    repo="https://github.com/rejuvyesh/StructuredMechModels.jl/blob/{commit}{path}#L{line}",
+    repo="https://github.com/sisl/StructuredMechModels.jl/blob/{commit}{path}#L{line}",
     sitename="StructuredMechModels.jl",
     authors="rejuvyesh <mail@rejuvyesh.com>",
     assets=String[],
 )
 
 deploydocs(;
-    repo="github.com/rejuvyesh/StructuredMechModels.jl",
+    repo="github.com/sisl/StructuredMechModels.jl",
 )
