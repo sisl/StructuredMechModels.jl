@@ -106,7 +106,7 @@ include("dataset.jl")
 
 include("datagen.jl")
 
-#include("supervised.jl")
+include("supervised.jl")
 
 include("policy.jl")
 
