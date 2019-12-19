@@ -55,6 +55,24 @@ struct ALTRO
     K
 end
 
+"""
+Performs direct-collocation using Augmented Lagrangian method
+
+$(SIGNATURES)
+
+Arguments:
+    - `model`:
+    - `x0`:
+    - `xf`:
+    - `Q`:
+    - `R`:
+    - `Qf`:
+    - `N`:
+    - `dt`:
+
+Returns:
+    `ALTRO` object containing the nominal tracking trajectory and the gains
+"""
 function ALTRO(model, x0, xf, Q, R, Qf, N, dt;
                ilqr_opts=(iterations=200,
                           iterations_linesearch=10,
@@ -99,6 +117,11 @@ function ALTRO(model, x0, xf, Q, R, Qf, N, dt;
     return ALTRO(prob.X, prob.U, solver.solver_al.solver_uncon.K)
 end
 
+"""
+Generates the nominal trajectory to track and a TVLQR follwer for the same trajectory
+
+$(SIGNATURES)
+"""
 function TVLQRController(model, x0, xf, Q, R, Qf, N, dt;
                          TVLQR_Q = nothing,
                          TVLQR_R = nothing,
@@ -130,6 +153,10 @@ function TVLQRController(model, x0, xf, Q, R, Qf, N, dt;
 end
 
 """
+Generates a TVLQR trajectory follower given the nominal trajectory `nom_traj`
+
+$(SIGNATURES)
+
 Q, R, Qf refer to the TVLQR costs
 """
 function TVLQRController(model, x0, xf, nom_traj, Q, R, Qf, N, dt, LQR_eps)
@@ -184,6 +211,11 @@ end
 struct RandomController <: AbstractController
 end
 
+"""
+Generates a controller with random actions 
+
+$(SIGNATURES)
+"""
 function RandomController(model, std)
     return (t, x, thetamask) -> std * randn(model.m)
 end
