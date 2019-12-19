@@ -9,26 +9,17 @@ using StructuredMechModels
 const SMM = StructuredMechModels
 
 
-function backward_flux(model, loss, x, u, xp)
-    ps = Zygote.Params(Flux.params(model))
-    gs = Zygote.gradient(ps) do
-        loss(x, u, xp)
-    end
-end
-
-
-function backward_pytorch_naive(B)
+function forward_pytorch_naive(B)
     dt = 0.05
     nn = SMM.Torch.Naive(2, 1, [1, 1, 0, 0])
     x = SMM.Torch.torch.from_numpy(randn(B, 4))
     u = SMM.Torch.torch.from_numpy(randn(B, 1))
     xp = SMM.Torch.torch.from_numpy(randn(B, 4))
     loss, info = SMM.Torch.structmechmod.trainer.compute_loss(nn.nn, x, u, xp, dt)
-    loss.backward()
 end
 
 
-function backward_flux_naive(B)
+function forward_flux_naive(B)
     dt = 0.05
     nn = SMM.Naive(2, 1, [1, 1, 0, 0])
     function loss(x, u, xp)
@@ -38,21 +29,20 @@ function backward_flux_naive(B)
     x = randn(4, B)
     u = randn(1, B)
     xp = randn(4, B)
-    backward_flux(nn.nn, loss, x, u, xp)
+    loss(x, u, xp)
 end
 
-function backward_pytorch_ca(B)
+function forward_pytorch_ca(B)
     dt = 0.05
     nn = SMM.Torch.ControlAffine(2, 1, [1, 1, 0, 0])
     x = SMM.Torch.torch.from_numpy(randn(B, 4))
     u = SMM.Torch.torch.from_numpy(randn(B, 1))
     xp = SMM.Torch.torch.from_numpy(randn(B, 4))
     loss, info = SMM.Torch.structmechmod.trainer.compute_loss(nn.nn, x, u, xp, dt)
-    loss.backward()
 end
 
 
-function backward_flux_ca(B)
+function forward_flux_ca(B)
     dt = 0.05
     nn = SMM.ControlAffine(2, 1, [1, 1, 0, 0])
     function loss(x, u, xp)
@@ -62,56 +52,56 @@ function backward_flux_ca(B)
     x = randn(4, B)
     u = randn(1, B)
     xp = randn(4, B)
-    backward_flux(nn, loss, x, u, xp)
+    loss(x, u, xp)
 end
 
 
 for b in [64, 128, 256, 512]
     @info "PyTorch Naive $b"
-    @btime backward_pytorch_naive($b)
+    @btime forward_pytorch_naive($b)
 
     @info "Flux Naive $b"
-    @btime backward_flux_naive($b)
+    @btime forward_flux_naive($b)
 
     @info "PyTorch CA $b"
-    @btime backward_pytorch_ca($b)
+    @btime forward_pytorch_ca($b)
 
     @info "Flux CA $b"
-    @btime backward_flux_ca($b)
+    @btime forward_flux_ca($b)
 end
 
 #=
-julia> include("bench/fluxpytorch_back.jl")
+julia> include("bench/fluxpytorch_forw.jl")
 [ Info: PyTorch Naive 64
-5.048 ms (158 allocations: 11.22 KiB)
+3.459 ms (151 allocations: 10.91 KiB)
 [ Info: Flux Naive 64
- 3.352 ms (3192 allocations: 7.42 MiB)
+1.989 ms (337 allocations: 2.36 MiB)
 [ Info: PyTorch CA 64
-41.798 ms (254 allocations: 15.45 KiB)
+12.578 ms (247 allocations: 15.14 KiB)
 [ Info: Flux CA 64
-585.014 ms (2465222 allocations: 139.65 MiB)
+5.916 ms (29229 allocations: 12.97 MiB)
 [ Info: PyTorch Naive 128
-5.939 ms (158 allocations: 15.75 KiB)
+3.603 ms (151 allocations: 15.44 KiB)
 [ Info: Flux Naive 128
-5.703 ms (4472 allocations: 11.37 MiB)
+3.756 ms (337 allocations: 3.93 MiB)
 [ Info: PyTorch CA 128
-48.838 ms (254 allocations: 19.98 KiB)
+14.566 ms (247 allocations: 19.67 KiB)
 [ Info: Flux CA 128
-864.625 ms (4906430 allocations: 290.24 MiB)
+11.491 ms (56513 allocations: 25.67 MiB)
 [ Info: PyTorch Naive 256
-11.171 ms (158 allocations: 24.73 KiB)
+4.760 ms (151 allocations: 24.42 KiB)
 [ Info: Flux Naive 256
-18.896 ms (7033 allocations: 19.29 MiB)
+8.014 ms (337 allocations: 7.06 MiB)
 [ Info: PyTorch CA 256
-67.413 ms (254 allocations: 28.97 KiB)
+20.620 ms (247 allocations: 28.66 KiB)
 [ Info: Flux CA 256
-1.963 s (9787103 allocations: 630.31 MiB)
+23.608 ms (110785 allocations: 51.09 MiB)
 [ Info: PyTorch Naive 512
-13.937 ms (158 allocations: 42.73 KiB)
+5.093 ms (151 allocations: 42.42 KiB)
 [ Info: Flux Naive 512
-40.104 ms (12171 allocations: 35.13 MiB)
+24.017 ms (341 allocations: 13.32 MiB)
 [ Info: PyTorch CA 512
-117.407 ms (254 allocations: 46.97 KiB)
+26.165 ms (247 allocations: 46.66 KiB)
 [ Info: Flux CA 512
-5.268 s (19548297 allocations: 1.43 GiB)
+67.250 ms (219521 allocations: 101.97 MiB)
 =#
