@@ -8,4 +8,4 @@
 
 Learned models for control using [TrajectoryOptimization.jl](https://github.com/RoboticExplorationLab/TrajectoryOptimization.jl).
 
-
+See [structmechmod](https://github.com/sisl/structmechmod) for PyTorch version of the models.
