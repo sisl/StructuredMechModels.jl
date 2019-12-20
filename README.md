@@ -6,6 +6,6 @@
 [![Codecov](https://codecov.io/gh/sisl/StructuredMechModels.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/sisl/StructuredMechModels.jl)
 [![Coveralls](https://coveralls.io/repos/github/sisl/StructuredMechModels.jl/badge.svg?branch=master)](https://coveralls.io/github/sisl/StructuredMechModels.jl?branch=master)
 
-
+Learned models for control using [TrajectoryOptimization.jl](https://github.com/RoboticExplorationLab/TrajectoryOptimization.jl).
 
 
