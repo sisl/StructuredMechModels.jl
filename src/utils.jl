@@ -6,6 +6,15 @@ using BatchedRoutines
 
 """
 Visualize a trajectory in the browser
+
+$(SIGNATURES)
+
+**Arguments**:
+
+- `qs :: Vector{Vector{Float64}}` Position vectors of the trajectory
+- `ts` Timesteps of the trajectory
+- `mechanism` Robot model as per `RigidBodyDynamics`
+- `urdf` Path to URDF of the model
 """
 function viz_traj(qs, ts, mechanism, urdf)
     vis = Visualizer()
@@ -17,6 +26,8 @@ end
 
 """
 Matrix-matrix multiplication _batched_ and adjoint defined
+
+$(SIGNATURES)
 """
 function batchmul(A::AbstractArray{T,3},B::AbstractArray{V,3}) where {T, V}
     # XXX: To deal with Dual numbers from ForwardDiff

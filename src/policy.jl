@@ -14,6 +14,11 @@ struct TVLQRController <: AbstractController
     LQR_eps
 end
 
+"""
+Solves the discrete-time algebraic Riccati equation (DARE)
+
+$(SIGNATURES)
+"""
 function TVDARE(model, nom_x, nom_u, Q, R, Qf, dt)
     P = Qf
     n = model.n
@@ -60,18 +65,20 @@ Performs direct-collocation using Augmented Lagrangian method
 
 $(SIGNATURES)
 
-Arguments:
-    - `model`:
-    - `x0`:
-    - `xf`:
-    - `Q`:
-    - `R`:
-    - `Qf`:
-    - `N`:
-    - `dt`:
+**Arguments**:
 
-Returns:
-    `ALTRO` object containing the nominal tracking trajectory and the gains
+- `model :: TrajectoryOptimization.Model`
+- `x0 :: Vector{Float64}`
+- `xf :: Vector{Float64}`
+- `Q :: Matrix{Float64}`
+- `R :: Matrix{Float64}`
+- `Qf :: Matrix{Float64}`
+- `N :: Int64`
+- `dt :: Float64`
+
+**Returns**:
+
+`struct` containing the nominal tracking trajectory and the gains
 """
 function ALTRO(model, x0, xf, Q, R, Qf, N, dt;
                ilqr_opts=(iterations=200,
@@ -157,7 +164,7 @@ Generates a TVLQR trajectory follower given the nominal trajectory `nom_traj`
 
 $(SIGNATURES)
 
-Q, R, Qf refer to the TVLQR costs
+`Q`, `R`, `Qf` refer to the TVLQR costs
 """
 function TVLQRController(model, x0, xf, nom_traj, Q, R, Qf, N, dt, LQR_eps)
     model_d = discretize_model(model, :rk4)

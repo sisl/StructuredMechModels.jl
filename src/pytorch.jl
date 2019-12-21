@@ -30,10 +30,11 @@ Models the rigidbody as a Black-Box Neural Network
 
 $(SIGNATURES)
 
-Arguments:
-    - `qdim`: Dimensions of position configuration
-    - `udim`: Dimensions of active control
-    - `thetamask`: Binary Vector with ones corresponding to angles in the configuration space
+**Arguments**:
+
+- `qdim :: Int` Dimensions of position configuration
+- `udim :: Int` Dimensions of active control
+- `thetamask :: Vector{Int}` Binary Vector with ones corresponding to angles in the configuration space
 """
 function Naive(qdim::Int, udim::Int, thetamask; activation="Tanh", hidden_sizes=(128, 128, 128))
     nn = structmechmod.rigidbody.NaiveRigidBody(qdim, udim, torch.from_numpy(thetamask), hidden_sizes)
@@ -53,10 +54,11 @@ Models the rigidbody as a Structured Mechanical Model with no constraints on the
 
 $(SIGNATURES)
 
-Arguments:
-    - `qdim`: Dimensions of position configuration
-    - `udim`: Dimensions of active control
-    - `thetamask`: Binary Vector with ones corresponding to angles in the configuration space
+**Arguments**:
+
+- `qdim`: Dimensions of position configuration
+- `udim`: Dimensions of active control
+- `thetamask`: Binary Vector with ones corresponding to angles in the configuration space
 
 Useful when no prior knowledge about the active forces on a mechanical system.
 """
@@ -78,10 +80,11 @@ Models the rigidbody as a Structured Mechanical Model with the constraints that 
 
 $(SIGNATURES)
 
-Arguments:
-    - `qdim`: Dimensions of position configuration
-    - `udim`: Dimensions of active control
-    - `thetamask`: Binary Vector with ones corresponding to angles in the configuration space
+**Arguments**:
+    
+- `qdim`: Dimensions of position configuration
+- `udim`: Dimensions of active control
+- `thetamask`: Binary Vector with ones corresponding to angles in the configuration space
 
 Almost all mechanical systems are control affine in the input forces for control.
 """
@@ -100,9 +103,10 @@ end
 
 $(SIGNATURES)
 
-Arguments:
-    - `x`: Input state (includes state and actions)
-    - `u`: Input control
+**Arguments**:
+
+- `x`: Input state (includes state and actions)
+- `u`: Input control
 """
 function (f::PyTorchRigidBody)(x, u)
     q = torch.from_numpy(permutedims(x[1:f.qdim, :], (2, 1)))

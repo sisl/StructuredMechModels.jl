@@ -1,2 +1,3 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+StructuredMechModels = "49eb0842-c156-4c0e-b374-fa0a2422abc2"
