@@ -25,7 +25,7 @@ before_install:
   - python -m pip install --user pip
   - |
     python -m pip install --user virtualenv
-    virtualenv -p python3.6 venv
+    virtualenv -p 3.6 venv
     source venv/bin/activate
 
 after_success:
